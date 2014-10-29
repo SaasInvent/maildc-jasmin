@@ -2,23 +2,35 @@
 
 @maildc.info = do ->
 	#private
-	name = ""
-	getName = -> name
-	setName = (value) -> name = value
+  name = ""
+  class Basket
+    constructor: (@id)->
+      
+    items: []
+    distinctCount: 0
+    totalCount: 0
+    
+    add: (item, quantity) -> 
+       @items.push item
+       @distinctCount++
+       @totalCount++
+    
+  class Item
+    contructor: (@id)->
+    
+  newBasket = -> 
+    new Basket()
 
-	age = 0
-	getAge = -> age
-	setAge = (value) -> age = value
+  newItem = (item, quantity, price) -> 
+    new Item()
+    
+  getName = -> name
+  setName = (value) -> name = value
 
-	eat =  (food) -> 
-		if food? 
-			alert "Yummy #{food}!" 
-		else 
-			alert "I'm still hungry!"
+
 
 	# public
-	getName: getName
-	setName: setName
-	getAge: getAge
-	setAge: setAge
-	eat: eat
+  getName: getName
+  setName: setName
+  newBasket: newBasket
+  newItem: newItem
