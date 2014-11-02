@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="init()"
+                preinitialize="presetup()"
+                width="215" height="138"
+                backgroundColor="blue"
+                xmlns:local="*">
+    <mx:Script>
+		<![CDATA[
+
+        import flash.external.*;
+        import flash.net.NetConnection;
+        import flash.net.NetStream;
+        import mx.utils.ObjectUtil;
+        import mx.core.FlexGlobals;
+        import flash.system.Security;
+        import flash.system.SecurityPanel;
+        import flash.media.*;
+        import com.adobe.crypto.MD5;
+        import com.adobe.serialization.json.WKBJSON;
+
+        import spark.components.supportClasses.ButtonBarBase;
+
+        [Bindable]
+        public  var netConnection:NetConnection = null;
+        private var incomingNetStream:NetStream = null;
+        private var outgoingNetStream:NetStream = null;
+        private var mic:Microphone = null;
+        [Bindable] private var microphoneList:Array;
+        private var sessionid:String;
+        private var auth_user:String;
+        private var auth_domain:String;
+        private var mic_index:int = -1;
+
+        private var attachedUUID:String = "";
+
+        public function presetup():void
+        {
+            /* Load config here */
+
+        }
+
+        /********* JavaScript to Flash *********/
+ 
+        public function showPrivacy():void {
+            Security.showSettings(SecurityPanel.PRIVACY);
+        }
+
+
+
+        /*********  Flash to Javascript *********/
+
+        public function getIndex(account:String):void {
+          
+          var maildc:SharedObject = SharedObject.getLocal("maildc");
+          maildc.data.firstName = "John";
+          maildc.data.lastName = "Doe";
+          maildc.flush();
+            if (ExternalInterface.available) {
+                ExternalInterface.call("onGetIndex", "hallo");
+            }
+        }
+        public function saveIndex(index:String):void {
+
+            if (ExternalInterface.available) {
+                ExternalInterface.call("flashSavedIndex", index);
+            }
+        }
+
+
+        /********* Internal functions *********/
+        private function onDebug(message:String):void {
+            //statusTxt.text = (statusTxt.text != "") ? statusTxt.text + "\n" + message : message;
+            if (ExternalInterface.available) {
+                ExternalInterface.call("onDebug", message);
+            }
+        }
+
+        private function init():void
+        {
+            try {
+                Security.allowDomain("*");
+            } catch(e:Error) {
+                onDebug("Exception: " + e.toString());
+            }
+
+            if (ExternalInterface.available) {
+                try {
+                    ExternalInterface.marshallExceptions = true;
+                    ExternalInterface.addCallback("getIndex", this.getIndex); // javascript functions!!
+                    ExternalInterface.addCallback("saveIndex", this.saveIndex);
+                    ExternalInterface.addCallback("showPrivacy", this.showPrivacy);                   
+                } catch(e:Error) {
+                    onDebug("Exception: " + e.toString());
+                }
+            } else {
+                onDebug("ExternalInterface is disabled");
+            }
+            if (ExternalInterface.available) {
+                ExternalInterface.call("onInit");
+
+            }
+
+        }
+
+        ]]>
+	</mx:Script>
+    <!--<mx:Panel id="reader" title="Test" width="500">
+         <mx:TextArea width="500" color="#FF0000" id="statusTxt"/>
+     </mx:Panel>-->
+</mx:Application>
