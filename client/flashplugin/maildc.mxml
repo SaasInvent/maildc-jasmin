@@ -14,9 +14,11 @@
         import mx.core.FlexGlobals;
         import flash.system.Security;
         import flash.system.SecurityPanel;
+        import flash.net.SharedObject;
         import flash.media.*;
-        import com.adobe.crypto.MD5;
-        import com.adobe.serialization.json.WKBJSON;
+        //import com.adobe.crypto.MD5;
+        import com.maildc.email.Email;
+      //  import com.adobe.serialization.json.WKBJSON;
 
         import spark.components.supportClasses.ButtonBarBase;
 
@@ -39,6 +41,8 @@
 
         }
 
+        registerClassAlias("com.maildc.email.Email", Email);
+
         /********* JavaScript to Flash *********/
  
         public function showPrivacy():void {
@@ -52,11 +56,21 @@
         public function getIndex(account:String):void {
           
           var maildc:SharedObject = SharedObject.getLocal("maildc");
-          maildc.data.firstName = "John";
-          maildc.data.lastName = "Doe";
-          maildc.flush();
+          //maildc.data.firstName = "John";
+          //maildc.data.lastName = "Doe";
+          // maildc.flush();
+          var email:Email = new Email();
+          maildc.data.email = email;
+          var answer:String = JSON.stringify( {
+                           name:"Todd Anderson",
+                           company:"Infrared5",
+                           phone: maildc.data.email.getId()
+                       });
+          
+          //var retour:String = email.getId();
+          
             if (ExternalInterface.available) {
-                ExternalInterface.call("onGetIndex", "hallo");
+                ExternalInterface.call("onGetIndex", answer);
             }
         }
         public function saveIndex(index:String):void {
