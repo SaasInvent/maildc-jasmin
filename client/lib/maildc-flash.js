@@ -1,7 +1,7 @@
 // return functions from flash
 
 function onInit() {
-      flash = $("#flash"); 
+      var flash = $("#flash"); 
       console.log (flash) ;        
       console.log ('onInit');
       flash[0].getIndex("hallo"); 
@@ -11,6 +11,9 @@ function onInit() {
 function onGetIndex(index) {
     console.log ("onGetIndex");
     console.log (index);
+    console.log ($.parseJSON( index ));
+    var myObject = jQuery.parseJSON( index);
+    console.log (myObject.name);
 }
 
 
